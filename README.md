@@ -1,15 +1,29 @@
-# Kanap #
+<a href="https://dimitrifiacre.github.io/Kanap/">
+  <img src="https://i.gyazo.com/f7547b017b6dcf96097c577dcb9dab7d.png" alt="Kanap">
+</a>
+  
+**Kanap** est le projet 5 de la formation développeur web d'OpenClassrooms.
 
-This is the front end and back end server for Project 5 of the Web Developer path.
+------
+  
+## Scénario
+>Vous êtes en poste dans une agence de développement web depuis quelques semaines maintenant. Après avoir réalisé avec succès l’intégration de quelques sites web (HTML/CSS), on vous confie une nouvelle mission.
+>
+>Votre client est Kanap, une marque de canapés qui vend ses produits depuis sa boutique exclusivement. Aujourd’hui, celle-ci souhaiterait avoir une plateforme de e-commerce en plus de sa boutique physique pour vendre ses produits sur Internet.
 
-### Back end Prerequisites ###
+## Objectifs
+* Interagir avec un web service avec JavaScript
+* Gérer des événements JavaScript
+* Valider des données issues de sources externes
+* Créer un plan de test pour une application
 
-You will need to have Node and `npm` installed locally on your machine.
-
-### Back end Installation ###
-
-Clone this repo. From the "back" folder of the project, run `npm install`. You 
-can then run the server with `node server`. 
-The server should run on `localhost` with default port `3000`. If the
-server runs on another port for any reason, this is printed to the
-console when the server starts, e.g. `Listening on port 3001`.
+## Installation backend
+1. Installer les dépendences
+     ```
+     npm install
+     ```
+2. Lancer le serveur (commande à exécuter dans le dossier `back`)
+    ```
+    node server
+    ```
+    *Port par défaut : `3000` (http://localhost:3000)*
