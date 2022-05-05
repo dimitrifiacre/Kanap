@@ -6,7 +6,7 @@ function getProduct() {
     })
     .catch((error) => {
       let sectionItems = document.querySelector("#items");
-      sectionItems.innerHTML = "Aucun produit n'a été trouvé";
+      sectionItems.textContent = "Aucun produit n'a été trouvé";
     })
 
     // On affiche les données de l'API dans le DOM
@@ -28,12 +28,12 @@ function getProduct() {
         let productName = document.createElement("h3");
         productArticle.appendChild(productName);
         productName.classList.add("productName");
-        productName.innerHTML = resultAPI[product].name;
+        productName.textContent = resultAPI[product].name;
 
         let productDescription = document.createElement("p");
         productArticle.appendChild(productDescription);
         productDescription.classList.add("productDescription");
-        productDescription.innerHTML = resultAPI[product].description;
+        productDescription.textContent = resultAPI[product].description;
       }
     });
 }

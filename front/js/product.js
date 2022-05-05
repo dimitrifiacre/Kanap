@@ -8,7 +8,7 @@ function checkProduct() {
     let productID = searchParams.get('id');
   } else {
     let sectionItem = document.querySelector(".item");
-    sectionItem.innerHTML = "Le produit n'a pas été trouvé";
+    sectionItem.textContent = "Le produit n'a pas été trouvé";
     document.title = `Produit indisponible – Kanap`;
   }
 }
@@ -21,7 +21,7 @@ function showProduct() {
     })
     .catch((error) => {
       let sectionItems = document.querySelector(".item");
-      sectionItems.innerHTML = "Le produit n'a pas été trouvé";
+      sectionItems.textContent = "Le produit n'a pas été trouvé";
     })
 
     // On affiche les données de l'API dans le DOM
@@ -34,18 +34,18 @@ function showProduct() {
       productImage.alt = resultAPI.altTxt;
 
       let productTitle = document.querySelector("#title");
-      productTitle.innerHTML = resultAPI.name;
+      productTitle.textContent = resultAPI.name;
 
       let productPrice = document.querySelector("#price");
-      productPrice.innerHTML = resultAPI.price;
+      productPrice.textContent = resultAPI.price;
 
       let productDescription = document.querySelector("#description");
-      productDescription.innerHTML = resultAPI.description;
+      productDescription.textContent = resultAPI.description;
 
       let productColors = document.querySelector("#colors");
       for (let i = 0; i < resultAPI.colors.length; i++) {
         let productColorsOption = document.createElement("option");
-        productColorsOption.innerHTML = resultAPI.colors[i];
+        productColorsOption.textContent = resultAPI.colors[i];
         productColors.appendChild(productColorsOption);
       }
     });
