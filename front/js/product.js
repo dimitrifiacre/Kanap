@@ -51,6 +51,39 @@ function showProduct() {
     });
 }
 
+function addToCart() {
+  const addToCartBtn = document.querySelector("#addToCart");
+  const getStorage = localStorage.getItem("products");
+
+  addToCartBtn.addEventListener("click", () => {
+
+    // On crée le produit qui sera ajouté au panier
+    let productAdded = {
+      id: searchID,
+      quantity: parseFloat(document.querySelector("#quantity").value),
+      colors: document.querySelector("#colors").value,
+    }
+
+    // Tableau du localStorage
+    let ProductsInCart = [];
+
+    // Si le localStorage est vide, on crée le produit
+    if (getStorage == null) {
+      ProductsInCart.push(productAdded);
+      localStorage.setItem("products", JSON.stringify(ProductsInCart));
+      console.log('LS vide, création du produit')
+
+      // Si le localStorage existe, on le récupère et on ajoute le nouveau produit
+    } else if (getStorage !== null) {
+      ProductsInCart = JSON.parse(getStorage);
+      ProductsInCart.push(productAdded);
+      localStorage.setItem("products", JSON.stringify(ProductsInCart));
+
+      console.log('LS existant, mais ajout d\'un nouveau')
+    }
+  });
+}
 // On lance les fonctions
 checkProduct();
 showProduct();
+addToCart()
