@@ -51,6 +51,6 @@ function showProduct() {
     });
 }
 
-// On lance les fonctions (provisoirement)
+// On lance les fonctions
 checkProduct();
 showProduct();

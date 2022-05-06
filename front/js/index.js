@@ -37,5 +37,5 @@ function getProduct() {
       }
     });
 }
-// On lance la fonction (provisoirement)
+// On lance la fonction
 getProduct();
