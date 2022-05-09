@@ -46,6 +46,7 @@ function showProduct() {
       for (let i = 0; i < resultAPI.colors.length; i++) {
         let productColorsOption = document.createElement("option");
         productColorsOption.textContent = resultAPI.colors[i];
+        productColorsOption.value = resultAPI.colors[i];
         productColors.appendChild(productColorsOption);
       }
     });
@@ -53,7 +54,7 @@ function showProduct() {
 
 function addToCart() {
   const addToCartBtn = document.querySelector("#addToCart");
-  const getStorage = localStorage.getItem("products");
+  const getStorage = JSON.parse(localStorage.getItem("products"));
 
   addToCartBtn.addEventListener("click", () => {
 
@@ -67,20 +68,34 @@ function addToCart() {
     // Tableau du localStorage
     let ProductsInCart = [];
 
+    // On cherche un produit par son ID et couleur
+    let foundProduct = getStorage.find(p => p.id === searchID && p.colors === document.querySelector("#colors").value);
+
     // Si le localStorage est vide, on crée le produit
     if (getStorage == null) {
       ProductsInCart.push(productAdded);
       localStorage.setItem("products", JSON.stringify(ProductsInCart));
       console.log('LS vide, création du produit')
 
-      // Si le localStorage existe, on le récupère et on ajoute le nouveau produit
-    } else if (getStorage !== null) {
-      ProductsInCart = JSON.parse(getStorage);
-      ProductsInCart.push(productAdded);
+      // Produit trouvé, on ajoute la quantité
+    } else if (getStorage !== null && foundProduct != undefined) {
+      ProductsInCart = getStorage;
+      let addQuantity = parseInt(productAdded.quantity) + parseInt(foundProduct.quantity);
+      foundProduct.quantity = addQuantity;
       localStorage.setItem("products", JSON.stringify(ProductsInCart));
 
+      console.log(`Produit trouvé, quantité ajouté ${addQuantity}`);
+
+      // Si le localStorage existe, on le récupère et on ajoute le nouveau produit
+    } else if (getStorage !== null) {
+      ProductsInCart = getStorage;
+      ProductsInCart.push(productAdded);
+      localStorage.setItem("products", JSON.stringify(ProductsInCart));
       console.log('LS existant, mais ajout d\'un nouveau')
     }
+
+    document.location.href = "./cart.html";
+
   });
 }
 // On lance les fonctions
