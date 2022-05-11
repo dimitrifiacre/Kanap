@@ -68,30 +68,26 @@ function addToCart() {
     // Tableau du localStorage
     let ProductsInCart = [];
 
-    // On cherche un produit par son ID et couleur
-    let foundProduct = getStorage.find(p => p.id === searchID && p.colors === document.querySelector("#colors").value);
-
     // Si le localStorage est vide, on crée le produit
     if (getStorage == null) {
       ProductsInCart.push(productAdded);
       localStorage.setItem("products", JSON.stringify(ProductsInCart));
-      console.log('LS vide, création du produit')
 
       // Produit trouvé, on ajoute la quantité
-    } else if (getStorage !== null && foundProduct != undefined) {
+    } else if (getStorage !== null && getStorage.find(p => p.id === searchID && p.colors === document.querySelector("#colors").value) != undefined) {
+
+      // On cherche un produit par son ID/couleur que si un produit est déjà dans le localStorage
+      let foundProduct = getStorage.find(p => p.id === searchID && p.colors === document.querySelector("#colors").value);
       ProductsInCart = getStorage;
       let addQuantity = parseInt(productAdded.quantity) + parseInt(foundProduct.quantity);
       foundProduct.quantity = addQuantity;
       localStorage.setItem("products", JSON.stringify(ProductsInCart));
-
-      console.log(`Produit trouvé, quantité ajouté ${addQuantity}`);
 
       // Si le localStorage existe, on le récupère et on ajoute le nouveau produit
     } else if (getStorage !== null) {
       ProductsInCart = getStorage;
       ProductsInCart.push(productAdded);
       localStorage.setItem("products", JSON.stringify(ProductsInCart));
-      console.log('LS existant, mais ajout d\'un nouveau')
     }
 
     document.location.href = "./cart.html";
