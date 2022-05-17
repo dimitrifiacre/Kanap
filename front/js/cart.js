@@ -21,6 +21,8 @@ function getProduct(productLocalStorage) {
 // Le code et les variables qui seront affichés dans le panier
 function showProduct(productLocalStorage, productAPI) {
     let products = document.querySelector("#cart__items");
+    let deleteButtons = document.getElementsByClassName("deleteItem");
+
     products.innerHTML += `
         <article class="cart__item" data-id="${productLocalStorage.id}" data-color="${productLocalStorage.colors}">
             <div class="cart__item__img">
@@ -43,6 +45,11 @@ function showProduct(productLocalStorage, productAPI) {
                 </div>
             </div>
         </article>`;
+
+    // On appelle une fonction lors du clic
+    for (let button of deleteButtons) {
+        button.addEventListener("click", removeProduct);
+    }
 }
 
 // Une boucle pour afficher les produits dans le panier
@@ -57,6 +64,16 @@ function addProduct() {
             getProduct(product);
         }
     }
+}
+
+// On retire le produit du localStorage en fonction de son ID et sa couleur
+function removeProduct(click) {
+    let targetProduct = click.target.closest("article");
+    ProductsInCart = ProductsInCart.filter(p => p.id !== targetProduct.dataset.id && p.color !== targetProduct.dataset.color);
+    localStorage.setItem("products", JSON.stringify(ProductsInCart));
+
+    alert("Le produit a été supprimé");
+    window.location.reload();
 }
 
 // On lance la fonction
