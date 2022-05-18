@@ -22,6 +22,7 @@ function getProduct(productLocalStorage) {
 function showProduct(productLocalStorage, productAPI) {
     let products = document.querySelector("#cart__items");
     let deleteButtons = document.getElementsByClassName("deleteItem");
+    let quantityInputs = document.getElementsByClassName("itemQuantity");
 
     products.innerHTML += `
         <article class="cart__item" data-id="${productLocalStorage.id}" data-color="${productLocalStorage.colors}">
@@ -46,9 +47,13 @@ function showProduct(productLocalStorage, productAPI) {
             </div>
         </article>`;
 
-    // On appelle une fonction lors du clic
+    // On appelle les fonctions lors du clic ou changement de l'input
     for (let button of deleteButtons) {
         button.addEventListener("click", removeProduct);
+    }
+
+    for (let input of quantityInputs) {
+        input.addEventListener("change", editQuantityProduct);
     }
 }
 
@@ -69,11 +74,26 @@ function addProduct() {
 // On retire le produit du localStorage en fonction de son ID et sa couleur
 function removeProduct(click) {
     let targetProduct = click.target.closest("article");
-    ProductsInCart = ProductsInCart.filter(p => p.id !== targetProduct.dataset.id && p.color !== targetProduct.dataset.color);
+    ProductsInCart = ProductsInCart.filter(product => product.id !== targetProduct.dataset.id && product.colors !== targetProduct.dataset.color);
     localStorage.setItem("products", JSON.stringify(ProductsInCart));
 
     alert("Le produit a été supprimé");
     window.location.reload();
+}
+
+// On modifie la quantité du produit et on le remplace dans le localStorage
+function editQuantityProduct(click) {
+    let targetProduct = click.target.closest("article");
+
+    if (product => product.id == targetProduct.dataset.id && product.colors == targetProduct.dataset.color) {
+        let quantityProduct = click.target.closest(".itemQuantity");
+
+        // On cherche un produit par son ID/couleur dans le localStorage et on récupère sa quantité pour la remplacer par celle présente dans l'input 
+        let foundProduct = ProductsInCart.find(product => product.id == targetProduct.dataset.id && product.colors == targetProduct.dataset.color);
+        let newQuantity = parseInt(quantityProduct.value);
+        foundProduct.quantity = newQuantity;
+        localStorage.setItem("products", JSON.stringify(ProductsInCart));
+    }
 }
 
 // On lance la fonction

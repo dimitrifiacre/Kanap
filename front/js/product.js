@@ -53,8 +53,8 @@ function showProduct() {
 }
 
 function addToCart() {
-  const addToCartBtn = document.querySelector("#addToCart");
-  const getStorage = JSON.parse(localStorage.getItem("products"));
+  let addToCartBtn = document.querySelector("#addToCart");
+  let getStorage = JSON.parse(localStorage.getItem("products"));
 
   addToCartBtn.addEventListener("click", () => {
 
