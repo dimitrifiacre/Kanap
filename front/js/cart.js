@@ -74,7 +74,7 @@ function addProduct() {
 // On retire le produit du localStorage en fonction de son ID et sa couleur
 function removeProduct(click) {
     let targetProduct = click.target.closest("article");
-    ProductsInCart = ProductsInCart.filter(product => product.id !== targetProduct.dataset.id && product.colors !== targetProduct.dataset.color);
+    ProductsInCart = ProductsInCart.filter(product => product._id !== targetProduct.dataset.id && product.colors !== targetProduct.dataset.color);
     localStorage.setItem("products", JSON.stringify(ProductsInCart));
 
     alert("Le produit a été supprimé");
@@ -85,7 +85,7 @@ function removeProduct(click) {
 function editQuantityProduct(click) {
     let targetProduct = click.target.closest("article");
 
-    if (product => product.id == targetProduct.dataset.id && product.colors == targetProduct.dataset.color) {
+    if (product => product._id !== targetProduct.dataset.id && product.colors == targetProduct.dataset.color) {
         let quantityProduct = click.target.closest(".itemQuantity");
 
         // On cherche un produit par son ID/couleur dans le localStorage et on récupère sa quantité pour la remplacer par celle présente dans l'input 
