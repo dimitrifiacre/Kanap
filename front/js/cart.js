@@ -96,5 +96,51 @@ function editQuantityProduct(click) {
     }
 }
 
-// On lance la fonction
+// On récupère les données du formulaire et du localStorage pour les envoyer au back
+function toOrder() {
+    let cartOrderForm = document.querySelector("#order");
+
+    cartOrderForm.addEventListener("click", () => {
+        // Tableau pour stocker uniquement les ID des produits
+        let productID = [];
+        for (let i = 0; i < ProductsInCart.length; i++) {
+            productID.push(ProductsInCart[i].id);
+        };
+
+        // Objet pour stocker les informations du formulaire et ID produits
+        let orderObject = {
+            contact: {
+                firstName: document.querySelector("#firstName").value,
+                lastName: document.querySelector("#lastName").value,
+                address: document.querySelector("#address").value,
+                city: document.querySelector("#city").value,
+                email: document.querySelector("#email").value
+            },
+            products: productID
+        };
+
+        // Les options pour la méthode POST de fetch
+        let fetchOptions = {
+            method: 'POST',
+            body: JSON.stringify(orderObject),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        // On récupère les options et le tableau avec le contact et les ID
+        fetch("http://localhost:3000/api/products/order", fetchOptions)
+            .then((order) => {
+                console.log('Commande confirmé:\n')
+                console.table(orderObject);
+            })
+            .catch((error) => {
+                alert("Aucune information trouvé à partir de l'API");
+            });
+    });
+
+}
+
+// On lance les fonctions
 addProduct();
+toOrder();

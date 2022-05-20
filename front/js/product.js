@@ -74,10 +74,10 @@ function addToCart() {
       localStorage.setItem("products", JSON.stringify(ProductsInCart));
 
       // Produit trouvé, on ajoute la quantité
-    } else if (getStorage !== null && getStorage.find(p => p.id === searchID && p.colors === document.querySelector("#colors").value) != undefined) {
+    } else if (getStorage !== null && getStorage.find(product => product.id === searchID && product.colors === document.querySelector("#colors").value) != undefined) {
 
       // On cherche un produit par son ID/couleur que si un produit est déjà dans le localStorage
-      let foundProduct = getStorage.find(p => p.id === searchID && p.colors === document.querySelector("#colors").value);
+      let foundProduct = getStorage.find(product => product.id === searchID && product.colors === document.querySelector("#colors").value);
       ProductsInCart = getStorage;
       let addQuantity = parseInt(productAdded.quantity) + parseInt(foundProduct.quantity);
       foundProduct.quantity = addQuantity;
