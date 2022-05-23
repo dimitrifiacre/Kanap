@@ -59,7 +59,7 @@ function showProduct(productLocalStorage, productAPI) {
 
 // Une boucle pour afficher les produits dans le panier
 function addProduct() {
-    if (ProductsInCart == null) {
+    if (ProductsInCart == null || ProductsInCart.length == 0) {
         let errorMessage = document.querySelector("#cart__items");
         errorMessage.style.textAlign = "center";
         errorMessage.style.marginBottom = "135px";
@@ -98,9 +98,63 @@ function editQuantityProduct(click) {
 
 // On récupère les données du formulaire et du localStorage pour les envoyer au back
 function toOrder() {
-    let cartOrderForm = document.querySelector("#order");
+    let formLocation = document.querySelector(".cart__order__form");
 
-    cartOrderForm.addEventListener("click", () => {
+    // Les différents RegExp
+    let emailRegExp = new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$");
+    let textRegExp = new RegExp("^[a-zéèçà]{3,50}(-| )?([a-zéèçà]{3,50})?$");
+
+    // On vérifie que regexp est valide pour les textes
+    function validInput(inputText) {
+        let inputErrorMessage = inputText.nextElementSibling;
+
+        if (textRegExp.test(inputText.value)) {
+            inputErrorMessage.textContent = '';
+            return true;
+        } else {
+            inputErrorMessage.textContent = 'Veuillez entrer un texte valide.';
+            return false;
+        }
+    };
+
+    // On vérifie que regexp est valide pour le mail
+    function validEmail(inputEmail) {
+        let emailErrorMessage = inputEmail.nextElementSibling;
+
+        if (emailRegExp.test(inputEmail.value)) {
+            emailErrorMessage.textContent = '';
+            return true;
+        } else {
+            emailErrorMessage.textContent = 'Veuillez entrer un email valide.';
+            return false;
+        }
+    };
+
+    formLocation.firstName.addEventListener("change", function () {
+        validInput(this);
+    });
+
+    formLocation.lastName.addEventListener("change", function () {
+        validInput(this);
+    });
+
+    formLocation.address.addEventListener("change", function () {
+        validInput(this);
+    });
+
+    formLocation.city.addEventListener("change", function () {
+        validInput(this);
+    });
+
+    formLocation.email.addEventListener("change", function () {
+        validEmail(this);
+    });
+
+    formLocation.order.addEventListener("click", (click) => {
+
+        // On annule l'envoie du formulaire par défaut, on le vérifie avant
+        click.preventDefault();
+
         // Tableau pour stocker uniquement les ID des produits
         let productID = [];
         for (let i = 0; i < ProductsInCart.length; i++) {
@@ -110,11 +164,11 @@ function toOrder() {
         // Objet pour stocker les informations du formulaire et ID produits
         let orderObject = {
             contact: {
-                firstName: document.querySelector("#firstName").value,
-                lastName: document.querySelector("#lastName").value,
-                address: document.querySelector("#address").value,
-                city: document.querySelector("#city").value,
-                email: document.querySelector("#email").value
+                firstName: formLocation.firstName.value,
+                lastName: formLocation.lastName.value,
+                address: formLocation.address.value,
+                city: formLocation.city.value,
+                email: formLocation.email.value
             },
             products: productID
         };
@@ -128,17 +182,28 @@ function toOrder() {
             }
         };
 
-        // On récupère les options et le tableau avec le contact et les ID
-        fetch("http://localhost:3000/api/products/order", fetchOptions)
-            .then((order) => {
-                console.log('Commande confirmé:\n')
-                console.table(orderObject);
-            })
-            .catch((error) => {
-                alert("Aucune information trouvé à partir de l'API");
-            });
+        // Condition pour vérifier si le panier n'est pas vide et que les inputs sont corrects. Si tout est bon, on envoie le formulaire
+        if (orderObject.products.length == 0) {
+            alert("Vous n'avez aucun produit dans le panier")
+        } else if (validInput(formLocation.firstName) &&
+            validInput(formLocation.lastName) &&
+            validInput(formLocation.address) &&
+            validInput(formLocation.city) &&
+            validEmail(formLocation.email)
+        ) {
+            // On récupère les options et le tableau avec le contact et les ID
+            fetch("http://localhost:3000/api/products/order", fetchOptions)
+                .then((order) => {
+                    console.log('Commande confirmé:\n')
+                    console.table(orderObject);
+                })
+                .catch((error) => {
+                    alert("Aucune information trouvé à partir de l'API");
+                });
+        } else {
+            alert("Le formulaire n'est pas bon");
+        }
     });
-
 }
 
 // On lance les fonctions
