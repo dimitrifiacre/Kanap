@@ -96,6 +96,18 @@ function editQuantityProduct(click) {
     }
 }
 
+// On affiche le total des articles
+function showTotalProduct() {
+    let showTotalQuantity = document.querySelector("#totalQuantity");
+    let totalQuantity = 0;
+
+    for (let i = 0; i < ProductsInCart.length; i++) {
+        totalQuantity += ProductsInCart[i].quantity;
+    };
+
+    showTotalQuantity.textContent = totalQuantity;
+}
+
 // On récupère les données du formulaire et du localStorage pour les envoyer au back
 function toOrder() {
     let formLocation = document.querySelector(".cart__order__form");
@@ -208,4 +220,5 @@ function toOrder() {
 
 // On lance les fonctions
 addProduct();
+showTotalProduct();
 toOrder();
