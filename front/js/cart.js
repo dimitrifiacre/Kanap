@@ -20,32 +20,88 @@ function getProduct(productLocalStorage) {
 
 // Le code et les variables qui seront affichés dans le panier
 function showProduct(productLocalStorage, productAPI) {
-    let products = document.querySelector("#cart__items");
+    let productCartItems = document.querySelector("#cart__items");
     let deleteButtons = document.getElementsByClassName("deleteItem");
     let quantityInputs = document.getElementsByClassName("itemQuantity");
 
-    products.innerHTML += `
-        <article class="cart__item" data-id="${productLocalStorage.id}" data-color="${productLocalStorage.colors}">
-            <div class="cart__item__img">
-                <img src="${productAPI.imageUrl}" alt="${productAPI.altTxt}">
-            </div>
-            <div class="cart__item__content">
-                <div class="cart__item__content__description">
-                    <h2>${productAPI.name}</h2>
-                    <p>${productLocalStorage.colors}</p>
-                    <p>${productAPI.price} €</p>
-                </div>
-                <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                        <p>Qté : </p>
-                        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productLocalStorage.quantity}">
-                    </div>
-                    <div class="cart__item__content__settings__delete">
-                    <p class="deleteItem">Supprimer</p>
-                    </div>
-                </div>
-            </div>
-        </article>`;
+    // Création élément article
+    let productArticle = document.createElement("article");
+    productCartItems.appendChild(productArticle);
+    productArticle.className = "cart__item";
+    productArticle.setAttribute('data-id', productLocalStorage.id);
+    productArticle.setAttribute('data-color', productLocalStorage.colors);
+
+    // Création élément div
+    let productDivImg = document.createElement("div");
+    productArticle.appendChild(productDivImg);
+    productDivImg.className = "cart__item__img";
+
+    // Création élément image du produit
+    let productImg = document.createElement("img");
+    productDivImg.appendChild(productImg);
+    productImg.src = productAPI.imageUrl;
+    productImg.alt = productAPI.altTxt;
+
+    // Création élément div
+    let productContent = document.createElement("div");
+    productArticle.appendChild(productContent);
+    productContent.className = "cart__item__content";
+
+    // Création élément div
+    let productContentDesc = document.createElement("div");
+    productContent.appendChild(productContentDesc);
+    productContentDesc.className = "cart__item__content__description";
+
+    // Création élément nom du produit
+    let productName = document.createElement("h2");
+    productContentDesc.appendChild(productName);
+    productName.textContent = productAPI.name;
+
+    // Création élément couleur du produit
+    let productColor = document.createElement("p");
+    productContentDesc.appendChild(productColor);
+    productColor.textContent = productLocalStorage.colors;
+
+    // Création élément prix du produit
+    let productPrice = document.createElement("p");
+    productContentDesc.appendChild(productPrice);
+    productPrice.textContent = productAPI.price + ' €';
+
+    // Création élément div
+    let productContentSettings = document.createElement("div");
+    productContent.appendChild(productContentSettings);
+    productContentSettings.className = "cart__item__content__settings";
+
+    // Création élément div
+    let productContentQuantity = document.createElement("div");
+    productContentSettings.appendChild(productContentQuantity);
+    productContentQuantity.className = "cart__item__content__settings__quantity";
+
+    // Création élément quantité du produit
+    let productQuantity = document.createElement("p");
+    productContentQuantity.appendChild(productQuantity);
+    productQuantity.textContent = 'Qté : ';
+
+    // Création élément input des couleurs
+    let productQuantityInput = document.createElement("input");
+    productContentQuantity.appendChild(productQuantityInput);
+    productQuantityInput.value = productLocalStorage.quantity;
+    productQuantityInput.className = "itemQuantity";
+    productQuantityInput.setAttribute("type", "number");
+    productQuantityInput.setAttribute("min", "1");
+    productQuantityInput.setAttribute("max", "100");
+    productQuantityInput.setAttribute("name", "itemQuantity");
+
+    // Création élément div
+    let productContentDelete = document.createElement("div");
+    productContentSettings.appendChild(productContentDelete);
+    productContentDelete.className = "cart__item__content__settings__delete";
+
+    //Création élément bouton suppression
+    let productDelete = document.createElement("p");
+    productContentDelete.appendChild(productDelete);
+    productDelete.className = "deleteItem";
+    productDelete.textContent = 'Supprimer';
 
     // On appelle les fonctions lors du clic ou changement de l'input
     for (let button of deleteButtons) {
@@ -101,9 +157,11 @@ function showTotalProduct() {
     let showTotalQuantity = document.querySelector("#totalQuantity");
     let totalQuantity = 0;
 
-    for (let i = 0; i < ProductsInCart.length; i++) {
-        totalQuantity += ProductsInCart[i].quantity;
-    };
+    if (ProductsInCart !== null) {
+        for (let i = 0; i < ProductsInCart.length; i++) {
+            totalQuantity += ProductsInCart[i].quantity;
+        };
+    }
 
     showTotalQuantity.textContent = totalQuantity;
 }
@@ -114,7 +172,7 @@ function toOrder() {
 
     // Les différents RegExp
     let emailRegExp = new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$");
-    let textRegExp = new RegExp("^[a-zéèçà]{3,50}(-| )?([a-zéèçà]{3,50})?$");
+    let textRegExp = new RegExp("^[a-zéèçàA-Z]{2,50}(-| )?([a-zéèçàA-Z]{2,50})?$");
 
     // On vérifie que regexp est valide pour les textes
     function validInput(inputText) {
@@ -205,15 +263,18 @@ function toOrder() {
         ) {
             // On récupère les options et le tableau avec le contact et les ID
             fetch("http://localhost:3000/api/products/order", fetchOptions)
+                .then((response) => {
+                    return response.json();
+                })
                 .then((order) => {
-                    console.log('Commande confirmé:\n')
-                    console.table(orderObject);
+                    localStorage.clear();
+                    document.location.href = `./confirmation.html?orderId=${order.orderId}`;
                 })
                 .catch((error) => {
                     alert("Aucune information trouvé à partir de l'API");
                 });
         } else {
-            alert("Le formulaire n'est pas bon");
+            alert("Le formulaire est incomplet ou incorrect");
         }
     });
 }
