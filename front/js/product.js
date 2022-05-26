@@ -68,30 +68,37 @@ function addToCart() {
     // Tableau du localStorage
     let ProductsInCart = [];
 
-    // Si le localStorage est vide, on crée le produit
-    if (getStorage == null) {
-      ProductsInCart.push(productAdded);
-      localStorage.setItem("products", JSON.stringify(ProductsInCart));
+    // On vérifie d'avoir choisi une couleur et que ça soit entre 1 et 100 quantités
+    if (productAdded.colors == '') {
+      alert('Vous devez choisir une couleur')
+    } else if (productAdded.quantity < 1 || productAdded.quantity > 100) {
+      alert('Vous devez choisir une quantité entre 1 et 100')
+    } else {
 
-      // Produit trouvé, on ajoute la quantité
-    } else if (getStorage !== null && getStorage.find(product => product.id === searchID && product.colors === document.querySelector("#colors").value) != undefined) {
+      // Si le localStorage est vide, on crée le produit
+      if (getStorage == null) {
+        ProductsInCart.push(productAdded);
+        localStorage.setItem("products", JSON.stringify(ProductsInCart));
 
-      // On cherche un produit par son ID/couleur que si un produit est déjà dans le localStorage
-      let foundProduct = getStorage.find(product => product.id === searchID && product.colors === document.querySelector("#colors").value);
-      ProductsInCart = getStorage;
-      let addQuantity = parseInt(productAdded.quantity) + parseInt(foundProduct.quantity);
-      foundProduct.quantity = addQuantity;
-      localStorage.setItem("products", JSON.stringify(ProductsInCart));
+        // Produit trouvé, on ajoute la quantité
+      } else if (getStorage !== null && getStorage.find(product => product.id === searchID && product.colors === document.querySelector("#colors").value) != undefined) {
 
-      // Si le localStorage existe, on le récupère et on ajoute le nouveau produit
-    } else if (getStorage !== null) {
-      ProductsInCart = getStorage;
-      ProductsInCart.push(productAdded);
-      localStorage.setItem("products", JSON.stringify(ProductsInCart));
+        // On cherche un produit par son ID/couleur que si un produit est déjà dans le localStorage
+        let foundProduct = getStorage.find(product => product.id === searchID && product.colors === document.querySelector("#colors").value);
+        ProductsInCart = getStorage;
+        let addQuantity = parseInt(productAdded.quantity) + parseInt(foundProduct.quantity);
+        foundProduct.quantity = addQuantity;
+        localStorage.setItem("products", JSON.stringify(ProductsInCart));
+
+        // Si le localStorage existe, on le récupère et on ajoute le nouveau produit
+      } else if (getStorage !== null) {
+        ProductsInCart = getStorage;
+        ProductsInCart.push(productAdded);
+        localStorage.setItem("products", JSON.stringify(ProductsInCart));
+      }
+
+      document.location.href = "./cart.html";
     }
-
-    document.location.href = "./cart.html";
-
   });
 }
 // On lance les fonctions
