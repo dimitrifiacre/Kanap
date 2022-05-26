@@ -140,10 +140,12 @@ function removeProduct(click) {
 // On modifie la quantité du produit et on le remplace dans le localStorage
 function editQuantityProduct(click) {
     let targetProduct = click.target.closest("article");
+    let quantityProduct = click.target.closest(".itemQuantity");
 
-    if (product => product._id !== targetProduct.dataset.id && product.colors == targetProduct.dataset.color) {
-        let quantityProduct = click.target.closest(".itemQuantity");
-
+    // On met la quantité à 1 par défaut si on essaye de mettre en dessous
+    if (quantityProduct.value < 1) {
+        quantityProduct.value = 1;
+    } else {
         // On cherche un produit par son ID/couleur dans le localStorage et on récupère sa quantité pour la remplacer par celle présente dans l'input 
         let foundProduct = ProductsInCart.find(product => product.id == targetProduct.dataset.id && product.colors == targetProduct.dataset.color);
         let newQuantity = parseInt(quantityProduct.value);
