@@ -1,6 +1,10 @@
 // On récupère le localStorage
 let ProductsInCart = JSON.parse(localStorage.getItem("products"));
 
+// On définit le total de la quantité et du prix à 0 par défaut et on additionne tout le panier
+let totalProductsQuantity = 0;
+let totalProductsPrice = 0;
+
 // On récupère les infos de l'API par rapport à l'ID du produit dans le localStorage
 function getProduct(productLocalStorage) {
     fetch(`http://localhost:3000/api/products/${productLocalStorage.id}`)
@@ -111,6 +115,16 @@ function showProduct(productLocalStorage, productAPI) {
     for (let input of quantityInputs) {
         input.addEventListener("change", editQuantityProduct);
     }
+
+    // On se sert de la boucle pour additionner le total de quantité et prix des articles qu'on affiche
+    totalProductsQuantity += productLocalStorage.quantity;
+    totalProductsPrice += productLocalStorage.quantity * productAPI.price;
+
+    let showTotalQuantity = document.querySelector("#totalQuantity");
+    let showTotalPrice = document.querySelector("#totalPrice");
+
+    showTotalQuantity.textContent = totalProductsQuantity;
+    showTotalPrice.textContent = totalProductsPrice;
 }
 
 // Une boucle pour afficher les produits dans le panier
@@ -152,20 +166,6 @@ function editQuantityProduct(click) {
         foundProduct.quantity = newQuantity;
         localStorage.setItem("products", JSON.stringify(ProductsInCart));
     }
-}
-
-// On affiche le total des articles
-function showTotalProduct() {
-    let showTotalQuantity = document.querySelector("#totalQuantity");
-    let totalQuantity = 0;
-
-    if (ProductsInCart !== null) {
-        for (let i = 0; i < ProductsInCart.length; i++) {
-            totalQuantity += ProductsInCart[i].quantity;
-        };
-    }
-
-    showTotalQuantity.textContent = totalQuantity;
 }
 
 // On récupère les données du formulaire et du localStorage pour les envoyer au back
@@ -283,5 +283,4 @@ function toOrder() {
 
 // On lance les fonctions
 addProduct();
-showTotalProduct();
 toOrder();
