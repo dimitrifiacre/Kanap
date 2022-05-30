@@ -8,7 +8,6 @@ function getProduct() {
       let sectionItems = document.querySelector("#items");
       sectionItems.textContent = "Aucun produit n'a été trouvé";
     })
-
     // On affiche les données de l'API dans le DOM
     .then((resultAPI) => {
       const products = resultAPI;
@@ -37,5 +36,5 @@ function getProduct() {
       }
     });
 }
-// On lance la fonction
+
 getProduct();

@@ -4,12 +4,8 @@ let searchID = searchParams.get("id");
 
 // On vérifie si l'URL a bien un ID
 function checkProduct() {
-  if (searchParams.has('id')) {
-    let productID = searchParams.get('id');
-  } else {
-    let sectionItem = document.querySelector(".item");
-    sectionItem.textContent = "Le produit n'a pas été trouvé";
-    document.title = `Produit indisponible – Kanap`;
+  if (!(searchParams.has('id'))) {
+    document.location.href = "./index.html";
   }
 }
 
@@ -20,10 +16,9 @@ function showProduct() {
       return response.json();
     })
     .catch((error) => {
-      let sectionItems = document.querySelector(".item");
-      sectionItems.textContent = "Le produit n'a pas été trouvé";
+      let sectionItem = document.querySelector(".item");
+      sectionItem.textContent = "Le produit n'a pas été trouvé";
     })
-
     // On affiche les données de l'API dans le DOM
     .then((resultAPI) => {
       document.title = `Canapé "${resultAPI.name}" – Kanap`;
@@ -101,7 +96,7 @@ function addToCart() {
     }
   });
 }
-// On lance les fonctions
+
 checkProduct();
 showProduct();
 addToCart()
